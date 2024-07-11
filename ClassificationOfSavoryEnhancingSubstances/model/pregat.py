@@ -15,16 +15,15 @@ from torch_geometric.nn import GATConv
 from figure.heatmap import draw_heatmap
 
 atom_encoding = {
-        0:0,'C': 1, 'N': 2, 'O': 3, 'S': 4, 'H': 5  # 等等
+        0:0,'C': 1, 'N': 2, 'O': 3, 'S': 4, 'H': 5 
     }
 bond_encoding = {
-        'SINGLE': 1, 'DOUBLE': 2, 'AROMATIC': 3, 'TRIPLE': 4  # 等等
+        'SINGLE': 1, 'DOUBLE': 2, 'AROMATIC': 3, 'TRIPLE': 4 
     }
 def tensortogat(x,batch):
     classified_data = [[]]
     atomsm = batch.numpy()
     x = x.detach().numpy()
-    # 遍历tensor和labels，根据标签将元素分组
     labelnum = 0
     for element, label in zip(x, atomsm):
         if label == labelnum:
@@ -80,7 +79,7 @@ def getdatalist(smiles_list):
                 edge_encodings = []
                 for bond in mol.GetBonds():
                     bond_type = bond.GetBondType()
-                    edge_encoding = bond_encoding.get(bond_type.name, None)  # 如果编码不存在则为None
+                    edge_encoding = bond_encoding.get(bond_type.name, None)
                     edge_encodings.append(edge_encoding)
         x = torch.tensor(node_encodings, dtype=torch.float)
         edge_index = torch.tensor(edges, dtype=torch.long)
@@ -107,7 +106,7 @@ if __name__ == "__main__":
     parser.add_argument('--fold', default=1, type=int)
 
     hyper = parser.parse_args()
-    df = pd.read_csv(r'F:\BaiduNetdiskDownload\0504新改源代码\BERTSpliceSite\smiles预测.csv')
+    df = pd.read_csv('data/smiles.csv')
     df = df.values
     smiles_list = [i[0] for i in df]
     maskdatalist = getdatalist(smiles_list)
@@ -181,7 +180,6 @@ if __name__ == "__main__":
         print(f'Loss_test: {test_loss / (index1):.4f}')
         print(f'Accuracy on test set_test: {100 * correct / total:.2f}%')
     class_accuracies1 = [0, 0, 0, 0]
-    # 统计各个类别的准确率
     for pred1, true1 in zip(predicted, test):
         class_accuracies1[pred1] += (pred1 == true1)
 
